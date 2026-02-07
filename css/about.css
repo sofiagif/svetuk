@@ -1,0 +1,82 @@
+@import url("style.css");
+
+main {
+  max-width: 850px;
+  margin: 2.5rem auto;
+  padding: 0 1rem;
+}
+
+.intro, .history, .final-note {
+  background: linear-gradient(135deg, #3a4a52 0%, #333f46 100%);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  padding: 1.8rem;
+  margin-bottom: 2rem;
+  color: #d0d8dc;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.intro:hover, .history:hover, .final-note:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 26px rgba(74, 90, 98, 0.4);
+}
+
+h2 {
+  color: #bcced6;
+  text-align: center;
+  text-shadow: 0 0 6px rgba(188, 206, 214, 0.4);
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.fun-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  margin-bottom: 1rem;
+  border: 1px solid #4a5a62;
+}
+
+.spiral-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay-cat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 10px rgba(188, 206, 214, 0.4));
+}
+
+.fun-text {
+  color: #d0d8dc;
+  font-size: 1rem;
+  background: rgba(47, 61, 68, 0.8);
+  border: 1px solid #4a5a62;
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(47, 61, 68, 0.5);
+  transition: transform 0.3s ease;
+  max-width: 300px;
+}
+
+.fun-text:hover {
+  transform: scale(1.05);
+  color: #bcced6;
+}

@@ -1,0 +1,443 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #1e2328;
+  color: #d0d8dc;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* хедер */
+header {
+  background: linear-gradient(135deg, #3a4a52 0%, #2f3d44 100%);
+  color: #8fa5af;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  border-bottom: 2px solid #4a5a62;
+  position: relative;
+}
+
+.logo {
+  position: absolute;
+  left: 2rem;
+  height: 100px;
+  width: auto;
+}
+
+header h1 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-size: 2.8rem;
+  background: linear-gradient(90deg, #ffddb3, #ffd18c, #fff2d8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  transition: text-shadow 0.4s ease, transform 0.3s ease;
+}
+
+
+/* навігація */
+nav {
+  margin-top: 0.6rem;
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+}
+
+nav a {
+  color: #8fa5af;
+  margin: 0 1rem;
+  padding-bottom: 0.3rem;
+  text-decoration: none;
+  font-weight: bold;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+nav a:active {
+  color: #c99d6e;
+}
+
+nav {
+  position: relative;
+  --x1: 0px;
+  --x2: 110px;
+  --x3: 220px;
+}
+
+nav .line {
+  position: absolute;
+  bottom: 0;
+  left: 1.1rem;
+  height: 2px;
+  width: 60px;
+  background: #c99d6e;
+  border-radius: 1px;
+  transition: transform 0.3s ease;
+}
+
+nav:hover a.active ~ .line {
+  transform: none;
+}
+
+nav a:nth-child(1):hover ~ .line { transform: translateX(var(--x1)); }
+nav a:nth-child(2):hover ~ .line { transform: translateX(var(--x2)); }
+nav a:nth-child(3):hover ~ .line { transform: translateX(var(--x3)); }
+
+nav:not(:hover) a:nth-child(1).active ~ .line { transform: translateX(var(--x1)); }
+nav:not(:hover) a:nth-child(2).active ~ .line { transform: translateX(var(--x2)); }
+nav:not(:hover) a:nth-child(3).active ~ .line { transform: translateX(var(--x3)); }
+
+
+
+/* головний блок */
+main {
+  flex: 1; 
+  max-width: 900px;
+  margin: 2.5rem auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* 3д модель */
+.viewer-section {
+  background: linear-gradient(135deg, #3a4a52 0%, #333f46 100%);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  padding: 1.8rem;
+  border: 1px solid #4a5a62;
+}
+
+#viewer {
+  width: 100%;
+  height: 500px;
+  background: #252d32;
+  border-radius: 12px;
+  border: 1px solid #4a5a62;
+  box-shadow: inset 0 0 14px rgba(0,0,0,0.5);
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* контрольна панель */
+.controls-panel {
+  background: rgba(58, 74, 82, 0.7);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #4a5a62;
+}
+
+.controls-panel h3 {
+  margin: 0 0 1rem 0;
+  color: #a8bcc6;
+  font-size: 1.1rem;
+}
+
+.controls-panel label {
+  display: block;
+  margin: 1rem 0 0.3rem 0;
+  color: #8fa5af;
+  font-size: 0.9rem;
+}
+
+.controls-panel input[type="range"] {
+  width: 100%;
+  padding: 0.5rem;
+  background: #2f3d44;
+  border: 1px solid #4a5a62;
+  border-radius: 6px;
+  color: #d0d8dc;
+  cursor: pointer;
+}
+/* адаптивність до розміру вікна*/
+@media (max-width: 768px) {
+  #viewer {
+    height: 300px;
+  }
+
+  .controls-panel {
+    padding: 1rem;
+  }
+
+  .controls-panel h3 {
+    font-size: 1rem;
+  }
+
+  .controls-panel label {
+    font-size: 0.85rem;
+  }
+
+  .controls-panel button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+  }
+}
+
+/* завантаження моделей */
+.loading-overlay {
+  position: static;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(30, 35, 40, 0.95);
+  padding: 20px 40px;
+  border-radius: 12px;
+  border: 1px solid #4a5a62;
+  color: #a8bcc6;
+  font-size: 16px;
+  z-index: 1000;
+  text-align: center;
+}
+
+.loading-overlay.error {
+  color: #e07a7a;
+  border-color: #e07a7a;
+}
+
+/* футер */
+footer {
+  text-align: center;
+  padding: 1.2rem;
+  background: #2f3d44;
+  color: #7a8e98;
+  border-top: 2px solid #4a5a62;
+  font-size: 0.95rem;
+  margin-top: auto; 
+}
+
+footer a {
+  color: #c99d6e;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #d4ae82;
+}
+
+/* блоки тексту */
+.text-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.text-block {
+  width: 90%;
+  max-width: 800px;
+  height: 120x;
+  
+  background: rgba(47, 61, 68, 0.8);
+  padding: 1.6rem;
+  border-radius: 20px;
+  border: 1px solid #4a5a62;
+
+  box-shadow: 0 6px 20px rgb(47, 61, 68);
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.text-block:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(47, 61, 68, 0.5);
+}
+
+.text-block h2 {
+  color: #bcced6;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px #2f3d44;
+}
+
+.text-block p {
+  color: #8fa5af;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+/* картки з прев'ю еспонатів */
+.card {
+  width: 100%;
+  max-width: 800px;
+  min-height: 220px;
+  border-radius: 20px;
+  border: 1px solid #4a5a62;
+  position: relative; 
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  transition: all 0.6s ease;
+  cursor: pointer;
+  background-color: #252d32;
+}
+/* Стиль для картинки всередині */
+.card-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  z-index: 1; 
+  transition: transform 0.6s ease;
+}
+
+/* Оверлей з текстом поверх картинки */
+.card-overlay {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 2rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 30%, rgba(0,0,0,0) 100%);
+  box-sizing: border-box;
+}
+
+.card h2 {
+  margin: 0;
+  color: #ffddb3;
+  font-size: 1.8rem;
+}
+
+.card p {
+  color: #d0d8dc;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+/* ефекти */
+.card:hover {
+  min-height: 400px;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover .card-overlay {
+  background: linear-gradient(to top, rgba(25, 32, 36, 0.95) 40%, rgba(47, 61, 68, 0) 100%);
+}
+
+.card:hover p {
+  opacity: 1;
+  max-height: 300px;
+  margin-top: 1rem;
+}
+@media (max-width: 768px) {
+
+  header {
+    padding: 1rem;
+  }
+
+  /* логотип — меньше, но всё ещё слева */
+  .logo {
+    height: 64px;          /* было 100px */
+    left: 1rem;            /* было 2rem */
+  }
+
+  /* главный заголовок — меньше */
+  header h1 {
+    font-size: 1.8rem;     /* было 2.8rem */
+    letter-spacing: 1px;
+  }
+
+  /* навигация — та же, но компактнее */
+  nav {
+    margin-top: 0.4rem;
+
+    /* корректировка позиций линии под уменьшенный текст */
+    --x1: 0px;
+    --x2: 86px;            /* было 110px */
+    --x3: 172px;           /* было 220px */
+  }
+
+  nav a {
+    margin: 0 0.5rem;      /* было 0 1rem */
+    font-size: 0.9rem;     /* было 1rem */
+  }
+
+  nav .line {
+    left: 0.5rem;          /* было 1.1rem */
+    width: 48px;           /* было 60px */
+  }
+}
+/* ===== MOBILE: карточки в один ряд ===== */
+@media (max-width: 768px), (hover: none) {
+
+  .text-section {
+    align-items: stretch;     /* вместо center */
+  }
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+    min-height: 220px;
+    transform: none !important;
+  }
+
+  /* полностью отключаем hover-анимации */
+  .card:hover {
+    min-height: 220px !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .card p {
+    max-height: none;
+    opacity: 1;
+    margin-top: 0.6rem;
+  }
+  
+}
+
+@media (max-width: 768px) {
+
+  /* сбиваем любые колонки / grid / flex в 1 колонку */
+  .exhibit-list{
+    display: block !important;
+    column-count: 1 !important;
+    columns: auto !important;
+    gap: 0 !important;
+  }
+
+  /* каждый элемент занимает всю ширину */
+  .exhibit-item{
+    display: block !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 14px 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* если внутри есть кнопка — на всю ширину */
+  .exhibit-item .button{
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+}

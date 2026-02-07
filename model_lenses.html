@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Годинник і лінзи — Музей світла</title>
+
+  <link rel="stylesheet" href="css/model_lenses.css">
+</head>
+<body>
+
+<header>
+  <img src="images/logo.png" class="logo" alt="Логотип">
+  <h1>Віртуальний музей світла</h1>
+  <nav>
+    <a href="index.html">Головна</a>
+    <a href="exhibits.html" class="active">Експонати</a>
+    <a href="about.html">Про музей</a>
+    <span class="line"></span>
+  </nav>
+</header>
+
+<main>
+  
+<section class="intro">
+  <h2>Годинник крізь лінзи</h2>
+  <p>
+    Цей експонат демонструє, як оптичні лінзи змінюють зображення об’єкта:
+    збільшують, зменшують та перевертають його.
+  </p>
+</section>
+
+<section class="viewer-section">
+  <div id="viewer">
+
+    <div id="loadingOverlay">
+      Завантаження моделі годинника…
+    </div>
+
+    <div class="lens-panel">
+      <button data-lens="none" class="active">Без лінзи</button>
+      <button data-lens="convex">Збиральна</button>
+      <button data-lens="concave">Розсіювальна</button>
+      <button data-lens="invert">Перевернута</button>
+    </div>
+
+  </div>
+</section>
+<div id="infoSidebar">
+  <div id="infoToggle">інформація ◀</div>
+  <div id="infoContent">
+  <h3>Інформація</h3>
+
+
+    <p>
+    <b>Час створення:</b> приблизно VII століття до н. е.
+  </p>
+
+  <p>
+    <b>Опис:</b> Оптичні лінзи — це прозорі тіла, що заломлюють світло
+    і здатні змінювати вигляд об’єктів. Вони можуть збільшувати,
+    зменшувати або перевертати зображення залежно від своєї форми.
+  </p>
+
+  <p>
+    <b>Принцип роботи:</b> Лінза фокусує світло, формуючи нове зображення об’єкта.
+    Опуклі лінзи збільшують, увігнуті зменшують, а комбіновані можуть перевертати
+    зображення.
+  </p>
+
+  <p>
+    <b>Історичний приклад:</b> Лінза з ассирійського міста Німруд,
+    знайдена археологом Остіном Генрі Лейардом у 1853 році,
+    має овальну форму з однією пласкою та однією опуклою стороною
+    і забезпечує приблизно триразове збільшення.
+  </p>
+
+  <p>
+    <b>Застосування:</b> Лінзи широко використовують для корекції зору,
+    у мікроскопах і телескопах, фото та відеокамерах,
+    а також у наукових та медичних дослідженнях, де потрібно детально
+    розглядати об’єкти або змінювати їхнє зображення.
+  </p>
+</div>
+</div>
+<section class="text-video-toggle">
+  <div class="toggle-buttons">
+    <button class="toggle-btn active" id="textBtn">Текст</button>
+    <button class="toggle-btn" id="videoBtn">Відео</button>
+  </div>
+
+  <div class="text-block" id="textContent">
+    <h2>Фізика оптичних лінз</h2>
+
+    <p>
+      <b>Оптична лінза</b> — це прозоре тіло, обмежене двома сферичними
+      або однією сферичною та однією пласкою поверхнею,
+      яке змінює напрямок світлових променів за рахунок
+      <b>заломлення світла</b>.
+    </p>
+
+    <h3>Закон заломлення світла (Снеліуса)</h3>
+
+    <p>
+      На межі двох середовищ (повітря — скло) напрямок променя
+      змінюється відповідно до закону Снеліуса:
+    </p>
+
+    <p class="formula">
+      <i>n₁ · sin(θ₁) = n₂ · sin(θ₂)</i>
+    </p>
+
+    <p>
+      де <b>n₁</b> — показник заломлення повітря (≈1),  
+      <b>n₂</b> — показник заломлення скла,  
+      <b>θ₁</b> — кут падіння,  
+      <b>θ₂</b> — кут заломлення.
+    </p>
+
+    <p>
+      Через заломлення світлові промені в лінзі
+      або <b>збираються</b>, або <b>розходяться</b>.
+    </p>
+
+    <h3>Збиральна (опукла) лінза</h3>
+
+    <p>
+      Збиральна лінза фокусує паралельні промені в одну точку —
+      <b>фокус</b>. Якщо предмет знаходиться за фокусом,
+      утворюється <b>дійсне перевернуте зображення</b>.
+    </p>
+
+    <div class="illustration">
+      <img src="images/convex_lens.jfif" alt="Збиральна лінза" loading="lazy">
+      <p class="graph-caption">
+        <b>Рисунок:</b> Хід променів у збиральній (опуклій) лінзі.
+      </p>
+    </div>
+
+    <h3>Розсіювальна (увігнута) лінза</h3>
+
+    <p>
+      Розсіювальна лінза змушує паралельні промені
+      розходитись. Зображення завжди
+      <b>уявне, пряме та зменшене</b>.
+    </p>
+
+    <div class="illustration">
+      <img src="images/concave_lens.jfif" alt="Розсіювальна лінза" loading="lazy">
+      <p class="graph-caption">
+        <b>Рисунок:</b> Хід променів у розсіювальній (увігнутій) лінзі.
+      </p>
+    </div>
+
+    <h3>Формула тонкої лінзи</h3>
+
+    <p>
+      Зв’язок між фокусною відстанню, відстанню до предмета
+      та відстанню до зображення описується формулою:
+    </p>
+
+    <p class="formula">
+  <span class="frac">
+    <span class="top">1</span>
+    <span class="bottom">f</span>
+  </span>
+  =
+  <span class="frac">
+    <span class="top">1</span>
+    <span class="bottom">d</span>
+  </span>
+  +
+  <span class="frac">
+    <span class="top">1</span>
+    <span class="bottom">d′</span>
+  </span>
+</p>
+    <p>
+      де <b>f</b> — фокусна відстань лінзи,  
+      <b>d</b> — відстань до предмета,  
+      <b>d′</b> — відстань до зображення.
+    </p>
+
+    <h3>Збільшення зображення</h3>
+
+    <p>
+      Лінза змінює розмір об’єкта відповідно до формули
+      лінійного збільшення:
+    </p>
+
+  <p class="formula">
+  Γ =
+  <span class="frac">
+    <span class="top">d′</span>
+    <span class="bottom">d</span>
+  </span>
+</p>
+    <p>
+      Саме цей ефект ви спостерігаєте,
+      розглядаючи годинник крізь різні типи лінз
+      у цьому експонаті.
+    </p>
+  </div>
+
+  <div class="video-block" id="videoContent" style="display: none;">
+    <iframe
+      width="100%"
+      height="415"
+      src="https://www.youtube.com/embed/mQTHYgPU7zo"
+      title="Оптичні лінзи — демонстрація"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>© 2025 Віртуальний музей світла</p>
+</footer>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module" src="js/lenses.js"></script>
+</body>
+</html>

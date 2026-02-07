@@ -1,0 +1,280 @@
+@import url("style.css");
+
+/* Секція моделі */
+.model-section {
+  text-align: center;
+  padding: 40px 40px 40px;
+  color: #d0d8dc;
+}
+
+.model-section h2 {
+  color: #c99d6e;
+  text-shadow: #2f3d44;
+  margin-bottom: 12px;
+}
+
+.model-section p {
+  color: #a8bcc6;
+  max-width: 700px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}
+
+.help-bar {
+  max-width: 700px;
+  margin: 0 auto 20px;
+  background: rgba(30, 35, 40, 0.5);
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #a8bcc6;
+  text-align: left;
+}
+
+/* моднль */
+#viewer {
+  position: relative;
+  width: 90%;
+  max-width: 1000px;
+  height: 70vh;
+  background: radial-gradient(circle at center, #1b1f24 0%, #0f1114 100%);
+  border-radius: 14px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  margin: 30px auto;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+}
+
+/* Панель керування */
+.camera-controls {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  color: #c99d6e;
+  width: 180px;
+}
+
+.camera-controls label {
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 6px;
+  color: #a8bcc6;
+}
+
+.camera-controls input,
+.camera-controls select {
+  width: 100%;
+  margin-top: 4px;
+  border: none;
+  border-radius: 6px;
+  padding: 4px;
+  background: #2f3d44;
+  color: #c99d6e;
+}
+
+.view-btn {
+  display: block;
+  margin: 10px auto 0;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #4a5a62;
+  background-color: #2f3d44;
+  color: #c99d6e;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+  background-color: #3f5058;
+  color: #d4ae82;
+  box-shadow: 0 0 10px rgba(201, 157, 110, 0.3);
+}
+
+/* Інфо підказка */
+#viewer-info {
+  position: absolute;
+  bottom: 12px;
+  right: 20px;
+  font-size: 0.9rem;
+  color: #a8bcc6;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 10px;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+/* Адаптивність до розмірк екрана*/
+@media (max-width: 768px) {
+  #viewer {
+    height: 55vh;
+  }
+
+  .camera-controls {
+    top: auto;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    text-align: center;
+  }
+
+  #viewer-info {
+    font-size: 0.8rem;
+  }
+}
+/* Блок текст/відео */
+.text-video-toggle {
+  max-width: 900px;
+  margin: 40px auto 60px;
+  padding: 2rem;
+  background: rgba(47, 61, 68, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgb(47, 61, 68);
+  text-align: center;
+  border: 1px solid #4a5a62;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.text-video-toggle:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px #2f3d44;
+}
+
+/* Кнопки */
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-btn {
+  background: #2f3d44;
+  color: #bcced6;
+  border: 1px solid #4a5a62;
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background: #3c4d55;
+  color: #c99d6e;
+}
+
+.toggle-btn.active {
+  background: #c99d6e;
+  color: #0f1114;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(201, 157, 110, 0.5);
+}
+.illustration {
+  text-align: center;
+  margin: 1.5em 0;
+}
+
+.illustration img {
+  width: 100%;
+  max-width: 600px; 
+  object-fit: cover; 
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.graph-caption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.5em;
+}
+
+/* Індикатор завантаження*/
+#loadingOverlay {
+  position: absolute;
+  inset: 0; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,17,20,0.85);
+  color: #c99d6e;
+  font-size: 1.1rem;
+  text-align: center;
+  z-index: 10;
+}
+/* сайдбар */
+#infoSidebar {
+  position: fixed;
+  top: 200px;
+  right: 0;
+  width: 250px; 
+  transform: translateX(250px);
+  transition: transform 0.3s ease;
+  font-family: sans-serif;
+  z-index: 2000;
+}
+
+#infoToggle {
+  position: absolute;
+  left: -90px;
+  top: 0;
+  width: 90px;
+  height: 40px;
+  background: #3c4d55;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px 0 0 8px;
+  font-weight: normal;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  box-shadow: -2px 2px 8px rgba(0,0,0,0.3);
+}
+
+#infoContent {
+  background: #f6f1eb;
+  color: #333;
+  padding: 15px;
+  box-shadow: -2px 2px 10px rgba(0,0,0,0.2);
+  border-radius: 8px 0 0 8px;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+#infoSidebar.open {
+  transform: translateX(0);
+}
+
+/* Мобільні */
+@media (max-width: 768px) {
+  #infoSidebar {
+    top: 150px;
+  }
+
+  #infoToggle {
+    width: 80px;
+    left: -80px;
+    font-size: 9px;
+  }
+
+  #infoContent {
+    font-size: 0.9rem;
+    max-height: calc(100vh - 170px);
+  }
+}
