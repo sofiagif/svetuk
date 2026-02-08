@@ -279,7 +279,10 @@ canvas {
   }
 }
 /* чтобы свайпы/тапы не скроллили/зумлили страницу поверх 3D */
-#viewer, #viewer canvas { touch-action: none; }
+#viewer, #viewer canvas, #loadingOverlay {
+  touch-action: none;
+}
+
 
 /* по умолчанию скрыто */
 .mobile-controls { display: none; }

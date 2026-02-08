@@ -15,6 +15,7 @@
     <a href="exhibits.html" class="active">Експонати</a>
     <a href="about.html">Про музей</a>
     <span class="line"></span>
+    </nav>
 </header>
 
 <main>
@@ -25,21 +26,31 @@
 
   <section class="viewer-section">
     <div id="viewer">
+      <div class="mobile-controls" id="mobileControls" style="display:none;">
+  <div class="move-pad">
+    <button class="mbtn" data-move="forward">▲</button>
+    <div class="row">
+      <button class="mbtn" data-move="left">◀</button>
+      <button class="mbtn" data-move="backward">▼</button>
+      <button class="mbtn" data-move="right">▶</button>
+    </div>
+  </div>
+  <div class="hint">Проведи пальцем по моделі — огляд. Кнопки — рух.</div>
+</div>
+
+
+
+
+
+
+
+
+
       <div id="loadingOverlay"> Завантаження моделі...</div>
     </div>
     <div class="controls-panel">
       <h3>Налаштування моделі</h3>
-      <!-- Мобільне керування -->
-<div class="mobile-controls" id="mobileControls">
-  <button class="mbtn" id="btnForward" aria-label="Вперед">▲</button>
-
-  <div class="row">
-    <button class="mbtn" id="btnLeft" aria-label="Вліво">◀</button>
-    <button class="mbtn" id="btnBack" aria-label="Назад">▼</button>
-    <button class="mbtn" id="btnRight" aria-label="Вправо">▶</button>
-  </div>
-</div>
-
+      
       <div class="help-bar">
         <strong>Керування:</strong><br>
         🖱️ Миша - огляд<br>
