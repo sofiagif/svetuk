@@ -490,3 +490,6 @@ if (infoSidebar && infoToggle) {
       : "інформація ◀";
   });
 }
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => loadingOverlay.classList.add('hidden'));
+});
