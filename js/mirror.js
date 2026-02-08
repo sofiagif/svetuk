@@ -115,8 +115,7 @@ function setupMaterials(root, envMap) {
         walls.push(obj);
       } else if (name.includes('floor')) {
         obj.material = new THREE.MeshStandardMaterial({ color: 0xb8b8b8, metalness: 0.3, roughness: 0.7, envMap });
-      
-      }
+      } 
     }
   });
 }
@@ -188,7 +187,9 @@ function animate() {
   const delta = clock.getDelta();
   frameCount++;
 
-  if (controls && controls.isLocked) {
+  const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+if ((controls && controls.isLocked) || isTouch) {
+
     velocity.x -= velocity.x * damping * delta;
     velocity.z -= velocity.z * damping * delta;
 
@@ -254,4 +255,32 @@ const infoToggle = document.getElementById('infoToggle');
 infoToggle.addEventListener('click', () => {
   infoSidebar.classList.toggle('open');
   infoToggle.textContent = infoSidebar.classList.contains('open') ? 'інформація ▶' : 'інформація ◀';
+});
+// --- Мобильные кнопки: минимальная привязка к move[] ---
+document.addEventListener("DOMContentLoaded", () => {
+  const panel = document.getElementById("mobileControls");
+  if (!panel) return;
+
+  const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  if (!isTouch) return; // на ПК не нужно
+
+  const bindHold = (id, key) => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+
+    const down = (e) => { e.preventDefault(); move[key] = true; };
+    const up   = (e) => { e.preventDefault(); move[key] = false; };
+
+    btn.addEventListener("touchstart", down, { passive: false });
+    btn.addEventListener("touchend", up, { passive: false });
+    btn.addEventListener("touchcancel", up, { passive: false });
+
+    // на всякий случай: если палец ушёл за кнопку
+    btn.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
+  };
+
+  bindHold("btnForward", "forward");
+  bindHold("btnBack", "backward");
+  bindHold("btnLeft", "left");
+  bindHold("btnRight", "right");
 });
