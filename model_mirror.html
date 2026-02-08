@@ -26,9 +26,20 @@
 
   <section class="viewer-section">
     <div id="viewer">
-      
-      <div id="loadingOverlay"> Завантаження моделі...</div>
+  <div id="loadingOverlay"> Завантаження моделі...</div>
+
+  <!-- Мобільні кнопки руху (видимі тільки на телефоні через CSS) -->
+  <div class="mobile-controls" id="mobileControls" aria-hidden="true">
+    <button class="mbtn up" data-move="forward">▲</button>
+    <div class="row">
+      <button class="mbtn left" data-move="left">◀</button>
+      <button class="mbtn down" data-move="backward">▼</button>
+      <button class="mbtn right" data-move="right">▶</button>
     </div>
+    <div class="hint">Торкнись і веди пальцем по моделі — огляд</div>
+  </div>
+</div>
+
     <div class="controls-panel">
       <h3>Налаштування моделі</h3>
       

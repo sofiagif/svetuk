@@ -278,3 +278,60 @@ canvas {
     max-height: calc(100vh - 170px);
   }
 }
+/* --- Mobile controls --- */
+.mobile-controls {
+  display: none; /* за замовчуванням сховано */
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 50;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto;
+}
+
+.mobile-controls .row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.mobile-controls .mbtn {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(15, 17, 20, 0.55);
+  color: #d0d8dc;
+  font-size: 20px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  touch-action: manipulation;
+}
+
+.mobile-controls .mbtn:active {
+  transform: scale(0.96);
+}
+
+.mobile-controls .hint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #a8bcc6;
+  max-width: 220px;
+  line-height: 1.25;
+  background: rgba(15, 17, 20, 0.35);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+
+/* показуємо кнопки лише на мобільному */
+@media (max-width: 900px) {
+  .mobile-controls { display: block; }
+}
+
+/* важливо: щоб торкання по canvas працювало нормально */
+#viewer canvas {
+  touch-action: none; /* дозволяє нам керувати touchmove */
+}
