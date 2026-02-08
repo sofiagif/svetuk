@@ -346,6 +346,21 @@ footer a:hover {
   max-height: 300px;
   margin-top: 1rem;
 }
+/* стилі для посилань на картках */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+}
+
+.card-link:hover,
+.card-link:active,
+.card-link:visited {
+  text-decoration: none;
+  color: inherit;
+}
 @media (max-width: 768px) {
 
   header {
