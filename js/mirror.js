@@ -4,315 +4,253 @@ import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/
 import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/geometries/TextGeometry.js';
 
-/* =======================
-   БАЗА
-======================= */
+//базові константи
 const MODEL_URL = 'models/mirror.glb';
 const HDRI_URL = 'textures/studio_small_09_1k.jpg';
-
 const container = document.getElementById('viewer');
 const loadingOverlay = document.getElementById('loadingOverlay');
 
-const isMobile =
-  matchMedia('(pointer: coarse)').matches ||
-  /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-/* =======================
-   СЦЕНА / КАМЕРА / РЕНДЕР
-======================= */
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a3e);
 scene.fog = new THREE.Fog(0x2a2a3e, 35, 100);
 
-const camera = new THREE.PerspectiveCamera(
-  75,
-  container.clientWidth / container.clientHeight,
-  0.1,
-  1000
-);
+const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.domElement.style.touchAction = 'none';
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.6;
 container.appendChild(renderer.domElement);
 
-/* resize */
-function resize() {
-  camera.aspect = container.clientWidth / container.clientHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(container.clientWidth, container.clientHeight);
-}
-window.addEventListener('resize', resize);
-window.addEventListener('orientationchange', resize);
-
-/* =======================
-   СВЕТ
-======================= */
+//світло
 scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.3);
-dirLight.position.set(10, 20, 10);
-scene.add(dirLight);
+const mainLight = new THREE.DirectionalLight(0xffffff, 1.3);
+mainLight.position.set(10, 20, 10);
+scene.add(mainLight);
 
-/* =======================
-   ДВИЖЕНИЕ
-======================= */
-let controls;
-let velocity = new THREE.Vector3();
-let direction = new THREE.Vector3();
+// гравець
+function createPlayerBody() {
+  const group = new THREE.Group();
+
+  const matBody = new THREE.MeshStandardMaterial({
+    color: 0x6699ff, metalness: 0.3, roughness: 0.6,
+    emissive: 0x3366ff, emissiveIntensity: 0.4
+  });
+  const matSkin = new THREE.MeshStandardMaterial({
+    color: 0xffe4c4, metalness: 0.1, roughness: 0.5
+  });
+
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1.7, 16), matBody);
+  body.position.y = -0.8;
+  group.add(body);
+
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.35, 16, 16), matSkin);
+  head.position.y = 0.3;
+  group.add(head);
+
+  return group;
+}
+
+// рух персонажа
+let controls, velocity = new THREE.Vector3(), direction = new THREE.Vector3();
 const move = { forward: false, backward: false, left: false, right: false };
-const speed = 9;
-const damping = 6;
-
+const speed = 9.0;
+const damping = 6.0;
 let walls = [];
 
-/* мобильный поворот */
-let started = false;
-let yaw = 0;
-let pitch = 0;
-let startPosition = null;
-
-/* =======================
-   ПК УПРАВЛЕНИЕ
-======================= */
-function setupDesktopControls(pos) {
+function setupMovement(startPosition) {
   controls = new PointerLockControls(camera, renderer.domElement);
+  container.addEventListener('click', () => { if (!controls.isLocked) controls.lock(); });
+  controls.addEventListener('lock', () => (loadingOverlay.style.display = 'none'));
   scene.add(controls.getObject());
-  controls.getObject().position.copy(pos);
 
-  container.addEventListener('click', () => {
-    if (!controls.isLocked) controls.lock();
-  });
+  controls.getObject().position.copy(startPosition);
 
-  controls.addEventListener('lock', () => {
-    loadingOverlay.style.display = 'none';
-  });
+  const playerBody = createPlayerBody();
+  playerBody.position.y = -1.2;
+  controls.getObject().add(playerBody);
 
-  document.addEventListener('keydown', e => {
-    if (e.code === 'KeyW') move.forward = true;
-    if (e.code === 'KeyS') move.backward = true;
-    if (e.code === 'KeyA') move.left = true;
-    if (e.code === 'KeyD') move.right = true;
-  });
-
-  document.addEventListener('keyup', e => {
-    if (e.code === 'KeyW') move.forward = false;
-    if (e.code === 'KeyS') move.backward = false;
-    if (e.code === 'KeyA') move.left = false;
-    if (e.code === 'KeyD') move.right = false;
-  });
+  const keyHandler = (e, state) => {
+    switch (e.code) {
+      case 'KeyW': case 'ArrowUp': move.forward = state; break;
+      case 'KeyS': case 'ArrowDown': move.backward = state; break;
+      case 'KeyA': case 'ArrowLeft': move.left = state; break;
+      case 'KeyD': case 'ArrowRight': move.right = state; break;
+      case 'Escape': if (state && controls.isLocked) controls.unlock(); break;
+    }
+  };
+  document.addEventListener('keydown', e => keyHandler(e, true));
+  document.addEventListener('keyup', e => keyHandler(e, false));
 }
 
-/* =======================
-   МОБИЛЬНЫЙ СТАРТ
-======================= */
-function startMobile() {
-  if (started || !startPosition) return;
-  started = true;
-
-  camera.position.copy(startPosition);
-  camera.position.y = 7;
-
-  yaw = -Math.PI / 2;
-  pitch = 0;
-  camera.rotation.order = 'YXZ';
-  camera.rotation.y = yaw;
-  camera.rotation.x = pitch;
-
-  loadingOverlay.style.display = 'none';
-  document.getElementById('mobileControls').style.display = 'flex';
-}
-
-/* =======================
-   TOUCH LOOK
-======================= */
-let touching = false;
-let lastX = 0, lastY = 0;
-
-renderer.domElement.addEventListener('touchstart', e => {
-  if (!isMobile) return;
-  startMobile();
-  touching = true;
-  lastX = e.touches[0].clientX;
-  lastY = e.touches[0].clientY;
-}, { passive: false });
-
-renderer.domElement.addEventListener('touchmove', e => {
-  if (!isMobile || !touching) return;
-  e.preventDefault();
-
-  const x = e.touches[0].clientX;
-  const y = e.touches[0].clientY;
-
-  yaw -= (x - lastX) * 0.004;
-  pitch -= (y - lastY) * 0.004;
-
-  const limit = Math.PI / 2 - 0.05;
-  pitch = Math.max(-limit, Math.min(limit, pitch));
-
-  camera.rotation.y = yaw;
-  camera.rotation.x = pitch;
-
-  lastX = x;
-  lastY = y;
-}, { passive: false });
-
-renderer.domElement.addEventListener('touchend', () => touching = false);
-
-/* =======================
-   КНОПКИ
-======================= */
-document.querySelectorAll('.mbtn').forEach(btn => {
-  const dir = btn.dataset.move;
-  btn.addEventListener('pointerdown', () => {
-    startMobile();
-    move[dir] = true;
+// дзеркала
+let mirrorCameras = [], mirrorMeshes = [];
+function createMirrorMaterial(position) {
+  const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256, {
+    format: THREE.RGBFormat, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter
   });
-  btn.addEventListener('pointerup', () => move[dir] = false);
-  btn.addEventListener('pointerleave', () => move[dir] = false);
-});
+  const cubeCamera = new THREE.CubeCamera(0.1, 100, cubeRenderTarget);
+  cubeCamera.position.copy(position);
+  scene.add(cubeCamera);
 
-/* =======================
-   КОЛЛИЗИИ
-======================= */
-function checkCollisions(pos) {
-  const box = new THREE.Box3().setFromCenterAndSize(
-    pos,
-    new THREE.Vector3(1, 4.5, 1)
-  );
-  return walls.some(w =>
-    box.intersectsBox(new THREE.Box3().setFromObject(w))
-  );
+  const material = new THREE.MeshStandardMaterial({
+    envMap: cubeRenderTarget.texture,
+    metalness: 0.97, roughness: 0.05, color: 0xC1C5D7, side: THREE.DoubleSide
+  });
+  return { material, camera: cubeCamera };
 }
-
-/* =======================
-   МАТЕРИАЛЫ / ЗЕРКАЛА
-======================= */
-let mirrorCameras = [];
-let mirrorMeshes = [];
 
 function setupMaterials(root, envMap) {
   walls = [];
-  mirrorCameras = [];
-  mirrorMeshes = [];
-
   root.traverse(obj => {
-    if (!obj.isMesh) return;
-    const name = obj.name.toLowerCase();
-
-    if (name.includes('mirror')) {
-      const rt = new THREE.WebGLCubeRenderTarget(256);
-      const cam = new THREE.CubeCamera(0.1, 100, rt);
-      cam.position.copy(obj.position);
-      scene.add(cam);
-
-      obj.material = new THREE.MeshStandardMaterial({
-        envMap: rt.texture,
-        metalness: 0.95,
-        roughness: 0.05
-      });
-
-      mirrorCameras.push(cam);
-      mirrorMeshes.push(obj);
-      walls.push(obj);
+    if (obj.isMesh) {
+      const name = obj.name.toLowerCase();
+      if (name.includes('mirror')) {
+        const { material, camera } = createMirrorMaterial(obj.position);
+        obj.material = material;
+        mirrorCameras.push(camera);
+        mirrorMeshes.push(obj);
+        walls.push(obj);
+      } else if (name.includes('floor')) {
+        obj.material = new THREE.MeshStandardMaterial({ color: 0xb8b8b8, metalness: 0.3, roughness: 0.7, envMap });
+      } 
     }
   });
 }
 
-/* =======================
-   ТЕКСТ ENTER
-======================= */
-function addSign() {
-  const fl = new FontLoader();
-  fl.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', f => {
-    const geo = new TextGeometry('ENTER', { font: f, size: 0.8, height: 0.1 });
-    const mat = new THREE.MeshStandardMaterial({ color: 0xe68a00 });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(-14, 6, -2.5);
-    mesh.rotation.y = -Math.PI / 2;
-    scene.add(mesh);
+function checkCollisions(pos) {
+  const box = new THREE.Box3().setFromCenterAndSize(pos, new THREE.Vector3(1.0, 4.5, 1.0));
+  return walls.some(w => box.intersectsBox(new THREE.Box3().setFromObject(w)));
+}
+
+// табличка входу
+function addEntranceSign() {
+  const fontLoader = new FontLoader();
+  fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', font => {
+    const textGeo = new TextGeometry('ENTER', {
+      font,
+      size: 0.8,
+      height: 0.1,
+      curveSegments: 8
+    });
+    const textMat = new THREE.MeshStandardMaterial({
+      color: 0xe68a00,
+      emissive: 0xe68a00,
+      emissiveIntensity: 1,
+      metalness: 0.4,
+      roughness: 0.3
+    });
+    const textMesh = new THREE.Mesh(textGeo, textMat);
+    textMesh.position.set(-14, 6, -2,5); 
+    textMesh.rotation.y = -Math.PI / 2; 
+    scene.add(textMesh);
   });
 }
 
-/* =======================
-   ЗАГРУЗКА
-======================= */
+// завантаження моделі
 const loader = new GLTFLoader();
-const pmrem = new THREE.PMREMGenerator(renderer);
-const texLoader = new THREE.TextureLoader();
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+const textureLoader = new THREE.TextureLoader();
 
-texLoader.load(HDRI_URL, tex => {
-  const env = pmrem.fromEquirectangular(tex).texture;
-  scene.environment = env;
+textureLoader.load(HDRI_URL, texture => {
+  const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+  scene.environment = envMap;
 
-  loader.load(MODEL_URL, gltf => {
-    const root = gltf.scene;
-    scene.add(root);
+  loader.load(
+    MODEL_URL,
+    gltf => {
+      const root = gltf.scene;
+      scene.add(root);
+      setupMaterials(root, envMap);
+      const startPosition = new THREE.Vector3(-16, 3, 0);
 
-    setupMaterials(root, env);
-    startPosition = new THREE.Vector3(-16, 3, 0);
+      setupMovement(startPosition);
+      controls.getObject().rotation.y = -Math.PI / 2; // дивитися у бік таблички "ВХІД"
+      addEntranceSign();
 
-    addSign();
-
-    loadingOverlay.textContent = isMobile
-      ? 'Торкніться, щоб почати'
-      : 'Клікніть, щоб почати';
-
-    if (!isMobile) setupDesktopControls(startPosition);
-  });
+      loadingOverlay.textContent = 'Клікніть, щоб почати!';
+      loadingOverlay.style.cursor = 'pointer';
+    },
+    xhr => loadingOverlay.textContent = `Завантаження: ${Math.round(xhr.loaded / xhr.total * 100)}%`,
+    err => loadingOverlay.textContent = 'Помилка: ' + err.message
+  );
 });
 
-/* =======================
-   АНИМАЦИЯ
-======================= */
+// анімація
 const clock = new THREE.Clock();
+let frameCount = 0;
 
 function animate() {
   requestAnimationFrame(animate);
-  const dt = clock.getDelta();
+  const delta = clock.getDelta();
+  frameCount++;
 
-  velocity.x -= velocity.x * damping * dt;
-  velocity.z -= velocity.z * damping * dt;
+  if (controls && controls.isLocked) {
+    velocity.x -= velocity.x * damping * delta;
+    velocity.z -= velocity.z * damping * delta;
 
-  direction.z = Number(move.forward) - Number(move.backward);
-  direction.x = Number(move.right) - Number(move.left);
-  direction.normalize();
+    direction.z = Number(move.forward) - Number(move.backward);
+    direction.x = Number(move.right) - Number(move.left);
+    direction.normalize();
 
-  velocity.z -= direction.z * speed * dt;
-  velocity.x -= direction.x * speed * dt;
+    if (move.forward || move.backward) velocity.z -= direction.z * speed * delta;
+    if (move.left || move.right) velocity.x -= direction.x * speed * delta;
 
-  if (!isMobile && controls?.isLocked) {
-    const dx = velocity.x * dt;
-    const dz = velocity.z * dt;
-    const next = controls.getObject().position.clone().add(new THREE.Vector3(-dx, 0, -dz));
-    if (!checkCollisions(next)) {
-      controls.moveRight(-dx);
-      controls.moveForward(-dz);
+    const moveX = velocity.x * delta;
+    const moveZ = velocity.z * delta;
+    const nextPos = controls.getObject().position.clone().add(new THREE.Vector3(-moveX, 0, -moveZ));
+
+    if (!checkCollisions(nextPos)) {
+      controls.moveRight(-moveX);
+      controls.moveForward(-moveZ);
     }
+
     controls.getObject().position.y = 7;
   }
 
-  if (isMobile && started) {
-    const forward = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0,1,0), yaw);
-    const right = new THREE.Vector3(1, 0, 0).applyAxisAngle(new THREE.Vector3(0,1,0), yaw);
-
-    const deltaPos = new THREE.Vector3()
-      .addScaledVector(right, -velocity.x * dt)
-      .addScaledVector(forward, -velocity.z * dt);
-
-    const next = camera.position.clone().add(deltaPos);
-    if (!checkCollisions(next)) camera.position.copy(next);
-    camera.position.y = 7;
+  if (frameCount % 10 === 0) {
+    mirrorMeshes.forEach((m, i) => {
+      if (mirrorCameras[i]) {
+        m.visible = false;
+        mirrorCameras[i].update(renderer, scene);
+        m.visible = true;
+      }
+    });
   }
-
-  mirrorMeshes.forEach((m, i) => {
-    m.visible = false;
-    mirrorCameras[i].update(renderer, scene);
-    m.visible = true;
-  });
 
   renderer.render(scene, camera);
 }
-
 animate();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const textBtn = document.getElementById("textBtn");
+  const videoBtn = document.getElementById("videoBtn");
+  const textContent = document.getElementById("textContent");
+  const videoContent = document.getElementById("videoContent");
+
+  if (textBtn && videoBtn && textContent && videoContent) {
+    textBtn.addEventListener("click", () => {
+      textBtn.classList.add("active");
+      videoBtn.classList.remove("active");
+      textContent.style.display = "block";
+      videoContent.style.display = "none";
+    });
+
+    videoBtn.addEventListener("click", () => {
+      videoBtn.classList.add("active");
+      textBtn.classList.remove("active");
+      textContent.style.display = "none";
+      videoContent.style.display = "block";
+    });
+  }
+});
+// відкриття сайдбару
+const infoSidebar = document.getElementById('infoSidebar');
+const infoToggle = document.getElementById('infoToggle');
+
+infoToggle.addEventListener('click', () => {
+  infoSidebar.classList.toggle('open');
+  infoToggle.textContent = infoSidebar.classList.contains('open') ? 'інформація ▶' : 'інформація ◀';
+});
