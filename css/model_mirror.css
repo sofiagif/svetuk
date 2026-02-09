@@ -278,7 +278,7 @@ canvas {
     max-height: calc(100vh - 170px);
   }
 }
-/* --- Mobile controls --- */
+/* телефон */
 .mobile-controls {
   display: none; /* за замовчуванням сховано */
   position: absolute;
@@ -326,12 +326,12 @@ canvas {
   padding: 8px 10px;
 }
 
-/* показуємо кнопки лише на мобільному */
+/*  кнопки лише на мобільному */
 @media (max-width: 900px) {
   .mobile-controls { display: block; }
 }
 
-/* важливо: щоб торкання по canvas працювало нормально */
+/* щоб торкання по canvas працювало нормально */
 #viewer canvas {
-  touch-action: none; /* дозволяє нам керувати touchmove */
+  touch-action: none;
 }

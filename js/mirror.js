@@ -27,7 +27,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-// outputEncoding видалено в нових версіях three → використовуємо outputColorSpace
+
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -85,7 +85,7 @@ let walls = [];
 // визначаємо мобільний режим
 const isTouch =
   "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
-// ✅ На телефоне полностью убираем "пелену" (overlay)
+
 if (isTouch && loadingOverlay) {
   loadingOverlay.style.display = "none";
   loadingOverlay.style.pointerEvents = "none";
@@ -168,7 +168,7 @@ function setupMobileControls(startPosition) {
 
   
 
-  // --- кнопки руху ---
+  // кнопки руху 
   const panel = document.getElementById("mobileControls");
   if (panel) {
     panel.setAttribute("aria-hidden", "false");
@@ -206,15 +206,15 @@ function setupMobileControls(startPosition) {
         { passive: false }
       );
 
-      // fallback (якщо раптом відкриють з маленького екрану, але миша є)
+      //  раптом відкриють з маленького екрану, але миша є
       btn.addEventListener("mousedown", () => setMove(key, true));
       btn.addEventListener("mouseup", () => setMove(key, false));
       btn.addEventListener("mouseleave", () => setMove(key, false));
     });
   }
 
-  // --- огляд пальцем по canvas ---
-  // важливо: touch-action: none у CSS + тут passive:false
+  //огляд пальцем 
+ 
   renderer.domElement.style.touchAction = "none";
 
   let touching = false;
@@ -240,7 +240,7 @@ function setupMobileControls(startPosition) {
     lastX = x;
     lastY = y;
 
-    // чутливість (можеш трохи змінити)
+    // чутливість 
     const sensitivity = 0.003;
 
     yaw -= dx * sensitivity;
@@ -261,7 +261,7 @@ function setupMobileControls(startPosition) {
   renderer.domElement.addEventListener("touchcancel", onEnd, { passive: true });
 }
 
-// --------- дзеркала ----------
+//  дзеркала 
 let mirrorCameras = [],
   mirrorMeshes = [];
 
@@ -309,21 +309,12 @@ function setupMaterials(root, envMap) {
           roughness: 0.7,
           envMap,
         });
-      } else if (name.includes("wall")) {
-        // якщо хочеш, щоб звичайні стіни теж блокували рух:
-        walls.push(obj);
+      
       }
     }
   });
 }
 
-function checkCollisions(pos) {
-  const box = new THREE.Box3().setFromCenterAndSize(
-    pos,
-    new THREE.Vector3(1.0, 4.5, 1.0)
-  );
-  return walls.some((w) => box.intersectsBox(new THREE.Box3().setFromObject(w)));
-}
 
 // табличка входу
 function addEntranceSign() {
@@ -348,7 +339,7 @@ function addEntranceSign() {
 
       const textMesh = new THREE.Mesh(textGeo, textMat);
 
-      // У тебе було (-2,5) — це помилка JS (кома). Зробив -2.5
+     
       textMesh.position.set(-14, 6, -2.5);
       textMesh.rotation.y = -Math.PI / 2;
 
@@ -357,7 +348,7 @@ function addEntranceSign() {
   );
 }
 
-// --------- завантаження моделі ----------
+//завантаження моделі 
 const loader = new GLTFLoader();
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
 const textureLoader = new THREE.TextureLoader();
@@ -404,7 +395,7 @@ textureLoader.load(HDRI_URL, (texture) => {
   );
 });
 
-// --------- анімація ----------
+// анімація 
 const clock = new THREE.Clock();
 let frameCount = 0;
 
@@ -438,11 +429,11 @@ function animate() {
       controls.moveForward(-moveZ);
     }
 
-    // фіксуємо висоту
+ 
     controls.getObject().position.y = 7;
   }
 
-  // оновлення дзеркал не кожен кадр (економія)
+  
   if (frameCount % 10 === 0) {
     mirrorMeshes.forEach((m, i) => {
       if (mirrorCameras[i]) {
@@ -457,14 +448,14 @@ function animate() {
 }
 animate();
 
-// --------- resize ----------
+
 window.addEventListener("resize", () => {
   camera.aspect = container.clientWidth / container.clientHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(container.clientWidth, container.clientHeight);
 });
 
-// --------- перемикач текст/відео ----------
+//перемикач текст/відео 
 document.addEventListener("DOMContentLoaded", () => {
   const textBtn = document.getElementById("textBtn");
   const videoBtn = document.getElementById("videoBtn");
@@ -488,7 +479,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// --------- відкриття сайдбару ----------
+
 const infoSidebar = document.getElementById("infoSidebar");
 const infoToggle = document.getElementById("infoToggle");
 

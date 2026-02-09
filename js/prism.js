@@ -121,13 +121,13 @@ scene.add(whiteGlow);
 
 // вихідні промені
 const spectrumColors = [
-  0xff6f61,  // мягкий красный
-  0xffb347,  // мягкий оранжевый
-  0xffeb8a,  // желтый
-  0x88d18a,  // зеленый
-  0x6acff6,  // голубой
-  0x5b5bff,  // синий
-  0xbf85ff   // фиолетовый
+  0xff6f61,  
+  0xffb347,  
+  0xffeb8a,  
+  0x88d18a, 
+  0x6acff6,  
+  0x5b5bff,  
+  0xbf85ff   
 ];
 
 const spectrum = [];
@@ -205,7 +205,7 @@ function updateSpectrum() {
 
 function animate() {
   requestAnimationFrame(animate);
-  //if (autoRotate) prism.rotation.y += 0.004;
+  
 
   mainLightTarget.position.copy(prism.position);
   updateSpectrum();

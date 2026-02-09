@@ -367,45 +367,45 @@ footer a:hover {
     padding: 1rem;
   }
 
-  /* логотип — менший, але все ще зліва */
+  
   .logo {
-    height: 60px;          /* було 100px, зменшено ще більше */
-    left: 0.5rem;          /* було 2rem, ближче до краю */
+    height: 60px;      
+    left: 0.5rem;         
   }
 
-  /* головний заголовок — значно менший */
+  
   header h1 {
-    font-size: 1.4rem;     /* було 2.8rem, тепер набагато менше */
-    letter-spacing: 0.5px; /* було 1.5px */
-    padding-left: 70px;    /* ДОДАНО: відступ зліва, щоб не заходити на лого */
+    font-size: 1.4rem;    
+    letter-spacing: 0.5px; 
+    padding-left: 70px;   
   }
 
   /* навігація — компактніша */
   nav {
     margin-top: 0.4rem;
-    padding-left: 0;       /* ДОДАНО: прибрати зайві відступи */
+    padding-left: 0;      
 
     /* коригування позицій лінії під зменшений текст */
     --x1: 0px;
-    --x2: 75px;            /* було 110px, ще менше */
-    --x3: 150px;           /* було 220px */
+    --x2: 75px;          
+    --x3: 150px;          
   }
 
   nav a {
-    margin: 0 0.4rem;      /* було 0 1rem */
-    font-size: 0.85rem;    /* було 1rem, трохи менше */
+    margin: 0 0.4rem;      
+    font-size: 0.85rem;    
   }
 
   nav .line {
-    left: 0.4rem;          /* було 1.1rem */
-    width: 45px;           /* було 60px */
+    left: 0.4rem;          
+    width: 45px;           
   }
 }
-/* ===== MOBILE: карточки в один ряд ===== */
+/*  картки один ряд  */
 @media (max-width: 768px), (hover: none) {
 
   .text-section {
-    align-items: stretch;     /* вместо center */
+    align-items: stretch;     
   }
 
   .card {
@@ -415,7 +415,7 @@ footer a:hover {
     transform: none !important;
   }
 
-  /* полностью отключаем hover-анимации */
+  
   .card:hover {
     min-height: 220px !important;
     transform: none !important;
@@ -432,7 +432,7 @@ footer a:hover {
 
 @media (max-width: 768px) {
 
-  /* сбиваем любые колонки / grid / flex в 1 колонку */
+ 
   .exhibit-list{
     display: block !important;
     column-count: 1 !important;
@@ -450,7 +450,7 @@ footer a:hover {
     box-sizing: border-box !important;
   }
 
-  /* если внутри есть кнопка — на всю ширину */
+  
   .exhibit-item .button{
     display: block !important;
     width: 100% !important;
