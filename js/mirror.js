@@ -85,6 +85,11 @@ let walls = [];
 // визначаємо мобільний режим
 const isTouch =
   "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+// ✅ На телефоне полностью убираем "пелену" (overlay)
+if (isTouch && loadingOverlay) {
+  loadingOverlay.style.display = "none";
+  loadingOverlay.style.pointerEvents = "none";
+}
 
 let yaw = 0;
 let pitch = 0;
@@ -161,9 +166,7 @@ function setupMobileControls(startPosition) {
     },
   };
 
-  // показати підказку замість "клікніть"
-  loadingOverlay.textContent = "Кнопки зліва внизу — рух. Палець по моделі — огляд.";
-  loadingOverlay.style.cursor = "default";
+  
 
   // --- кнопки руху ---
   const panel = document.getElementById("mobileControls");
@@ -385,12 +388,19 @@ textureLoader.load(HDRI_URL, (texture) => {
       addEntranceSign();
     },
     (xhr) => {
-      const p = xhr.total ? Math.round((xhr.loaded / xhr.total) * 100) : 0;
-      loadingOverlay.textContent = `Завантаження: ${p}%`;
-    },
-    (err) => {
-      loadingOverlay.textContent = "Помилка: " + err.message;
-    }
+  if (!isTouch && loadingOverlay) {
+    const p = xhr.total ? Math.round((xhr.loaded / xhr.total) * 100) : 0;
+    loadingOverlay.textContent = `Завантаження: ${p}%`;
+  }
+},
+(err) => {
+  if (!isTouch && loadingOverlay) {
+    loadingOverlay.textContent = "Помилка: " + err.message;
+  } else {
+    console.error(err);
+  }
+}
+
   );
 });
 
@@ -490,11 +500,7 @@ if (infoSidebar && infoToggle) {
       : "інформація ◀";
   });
 }
-  const overlay = document.getElementById('loadingOverlay');
+ 
 
-document.querySelectorAll('button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (overlay) overlay.classList.add('hidden');
-  });
-});
+
  

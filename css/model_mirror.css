@@ -335,7 +335,3 @@ canvas {
 #viewer canvas {
   touch-action: none; /* дозволяє нам керувати touchmove */
 }
-
-#loadingOverlay.hidden {
-  display: none !important;
-}
